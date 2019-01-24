@@ -1,0 +1,44 @@
+{
+    "igPackageRegistry": "https://packages.infragistics.com/npm/js-licensed/",
+    "customTemplates": [
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\custom-templates\\monk",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\custom-templates\\newReact",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\custom-templates\\newAngular2",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\newReactES66",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\ne5wReactES667",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\tale",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\lale",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\fgdfe",
+        "path:C:\\work\\GitHub\\ignite-ui-cli\\output\\myTemplate"
+    ],
+    "skipGit": false,
+    "skipAnalytic": false,
+    "stepByStep": {
+        "frameworks": [
+            "angular"
+        ],
+        "angular": {
+            "projTypes": [
+                "igx-ts"
+            ]
+        }
+    },
+    "version": "3.2.2",
+    "project": {
+        "defaultPort": 4200,
+        "framework": "angular",
+        "projectType": "igx-ts",
+        "projectTemplate": "side-nav",
+        "theme": "Custom",
+        "themePath": "$(themePath)",
+        "isBundle": false,
+        "bundleFilePath": "",
+        "igniteuiSource": "",
+        "components": [],
+        "sourceFiles": [],
+        "isShowcase": false,
+        "version": ""
+    },
+    "build": {},
+    "packagesInstalled": true
+}
