@@ -28,8 +28,8 @@ export class GridBatchEditingComponent implements OnInit {
   public ngOnInit(): void {
     this._cityService.getCities().subscribe(resp => {
       this.data = resp.body;
+	  this.addCityId = this.data.length + 1;
     });
-    this.addCityId = this.data.length + 1;
     this.transactionsData = this.transactions.getAggregatedChanges(true);
     this.transactions.onStateUpdate.subscribe(() => {
         this.transactionsData = this.transactions.getAggregatedChanges(true);
