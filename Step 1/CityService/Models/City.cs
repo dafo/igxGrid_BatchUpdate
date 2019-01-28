@@ -9,7 +9,7 @@ namespace CityService.Models
 		public string CityName { get; set; }
 		public int Population { get; set; }
 		public bool TrainStation { get; set; }
-		public object HolidayDate { get; set; }
+		public System.DateTime HolidayDate { get; set; }
 		public string Description { get; set; }
 	}
 }
