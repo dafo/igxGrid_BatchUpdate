@@ -16,6 +16,7 @@ export class GridBatchEditingComponent implements OnInit {
   @ViewChild('dialogGrid', { read: IgxGridComponent }) public dialogGrid: IgxGridComponent;
 
   public data = [];
+  public response = [];
   public transactionsData: Transaction[] = [];
   private addCityId: number;
 
@@ -27,8 +28,19 @@ export class GridBatchEditingComponent implements OnInit {
 
   public ngOnInit(): void {
     this._cityService.getCities().subscribe(resp => {
-      this.data = resp.body;
-	  this.addCityId = this.data.length + 1;
+      resp.body.forEach((elem) =>
+        this.response.push({
+          'CityID': elem.CityID,
+          'CityName': elem.CityName,
+          'Population': elem.Population,
+          'HolidayDate': new Date(elem.HolidayDate),
+          'TrainStation': elem.TrainStation,
+          'Description': elem.Description
+        })
+      );
+
+      this.data = this.response;
+	    this.addCityId = this.data.length + 1;
     });
     this.transactionsData = this.transactions.getAggregatedChanges(true);
     this.transactions.onStateUpdate.subscribe(() => {
@@ -40,8 +52,7 @@ export class GridBatchEditingComponent implements OnInit {
     this.grid.addRow({
       CityID: this.addCityId++,
       CityName: 'Provide city name!',
-      HolidayDate: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
-      .toISOString().slice(0, 10),
+      HolidayDate:new Date(2019, 6, 15),
       Population: 0,
       TrainStation: false,
       Description: 'Provide description!'
