@@ -51,8 +51,8 @@ namespace CityService.Controllers
 				}
 				else if (transaction.type == "delete")
 				{
-					var product = db.Cities.Where(x => x.CityID == transaction.id).Single();
-					db.Cities.Remove(product);
+					var city = db.Cities.Where(x => x.CityID == transaction.id).Single();
+					db.Cities.Remove(city);
 				}
 			}
 			db.SaveChanges();
