@@ -23,7 +23,7 @@ namespace CityService.Migrations
 			context.Cities.AddOrUpdate(x => x.CityID,
 				new City()
 				{
-					CityID = 1,
+					CityID = 32,
 					CityName = "Madrid",
 					Population = 3166000,
 					TrainStation = true,
@@ -32,7 +32,7 @@ namespace CityService.Migrations
 				},
 				new City()
 				{
-					CityID = 2,
+					CityID = 33,
 					CityName = "Collado Villalba",
 					Population = 62684,
 					TrainStation = true,
@@ -41,7 +41,7 @@ namespace CityService.Migrations
 				},
 				new City()
 				{
-					CityID = 3,
+					CityID = 34,
 					CityName = "Galapagar",
 					Population = 32404,
 					TrainStation = false,
@@ -50,7 +50,7 @@ namespace CityService.Migrations
 				},
 				new City()
 				{
-					CityID = 4,
+					CityID = 35,
 					CityName = "El Escorial",
 					Population = 15244,
 					TrainStation = true,
