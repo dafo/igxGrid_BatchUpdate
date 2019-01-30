@@ -5,6 +5,8 @@ namespace CityService.Models
 {
 	public class City
 	{
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CityID { get; set; }
 		public string CityName { get; set; }
 		public int Population { get; set; }
