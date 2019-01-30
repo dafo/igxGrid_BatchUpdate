@@ -21,8 +21,7 @@ namespace CityService.Controllers
 		{
 			return db.Cities;
 		}
-		// POST: api/Cities/UpdateCities
-		public ActionResult UpdateCities(ITransaction<City>[] transactions)
+		public IHttpActionResult UpdateCities(ITransaction<City>[] transactions)
 		{
 
 			foreach (var transaction in transactions)
@@ -54,12 +53,15 @@ namespace CityService.Controllers
 					db.Cities.Remove(city);
 				}
 			}
-			db.SaveChanges();
-			JsonResult result = new JsonResult();
-			Dictionary<string, bool> response = new Dictionary<string, bool>();
-			response.Add("Success", true);
-			result.Data = response;
-			return result;
+			try
+			{
+				db.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok();
 		}
 
 		public class ITransaction<T>
