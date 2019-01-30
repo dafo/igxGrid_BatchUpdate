@@ -12,13 +12,15 @@ import { GridBatchEditingWithTransactionsComponent } from './grid-batch-editing/
 
 import { HttpClientModule } from '@angular/common/http';
 import { CityService } from './grid-batch-editing/city.service';
+import { TransformDatesPipe } from './pipes/transform-dates.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     GridBatchEditingComponent,
-    GridBatchEditingWithTransactionsComponent
+    GridBatchEditingWithTransactionsComponent,
+    TransformDatesPipe
   ],
   imports: [
     FormsModule,
