@@ -31,7 +31,7 @@ namespace CityService.Controllers
 				{
 
 					// Find the city that needs to be updated
-					var city = db.Cities.Where(x => x.CityID == transaction.id).Single();
+					var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
 
 					// Update the properties values
 					db.Entry(city).CurrentValues.SetValues(transaction.newValue);
@@ -50,7 +50,7 @@ namespace CityService.Controllers
 				}
 				else if (transaction.type == "delete")
 				{
-					var city = db.Cities.Where(x => x.CityID == transaction.id).Single();
+					var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
 					db.Cities.Remove(city);
 				}
 			}
