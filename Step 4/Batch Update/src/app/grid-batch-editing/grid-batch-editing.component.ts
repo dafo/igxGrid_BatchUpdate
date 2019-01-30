@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { IgxDialogComponent, IgxGridComponent, Transaction } from 'igniteui-angular';
-import { ICity } from './city';
-import { Observable } from 'rxjs';
+import { City } from './city';
 import { CityService } from './city.service';
 
 @Component({
@@ -15,10 +14,8 @@ export class GridBatchEditingComponent implements OnInit {
   @ViewChild(IgxDialogComponent) public dialog: IgxDialogComponent;
   @ViewChild('dialogGrid', { read: IgxGridComponent }) public dialogGrid: IgxGridComponent;
 
-  public data = [];
-  public response = [];
+  public data: City [];
   public transactionsData: Transaction[] = [];
-  private addCityId: number;
 
   public get transactions() {
     return this.grid.transactions;
@@ -27,20 +24,8 @@ export class GridBatchEditingComponent implements OnInit {
   constructor(private _cityService: CityService) { }
 
   public ngOnInit(): void {
-    this._cityService.getCities().subscribe(resp => {
-      resp.body.forEach((elem) =>
-        this.response.push({
-          'CityID': elem.CityID,
-          'CityName': elem.CityName,
-          'Population': elem.Population,
-          'HolidayDate': new Date(elem.HolidayDate),
-          'TrainStation': elem.TrainStation,
-          'Description': elem.Description
-        })
-      );
-
-      this.data = this.response;
-	    this.addCityId = this.data.length + 1;
+    this._cityService.cities.subscribe(data => {
+      this.data = data;
     });
     this.transactionsData = this.transactions.getAggregatedChanges(true);
     this.transactions.onStateUpdate.subscribe(() => {
@@ -50,7 +35,6 @@ export class GridBatchEditingComponent implements OnInit {
 
   public addRow() {
     this.grid.addRow({
-      CityID: this.addCityId++,
       CityName: 'Provide city name!',
       HolidayDate:new Date(2019, 6, 15),
       Population: 0,
@@ -81,14 +65,6 @@ export class GridBatchEditingComponent implements OnInit {
   public discard() {
     this.grid.transactions.clear();
     this.dialog.close();
-  }
-
-  private getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  private classFromType(type: string): string {
-    return `transaction--${type.toLowerCase()}`;
   }
 
   public get hasTransactions(): boolean {
