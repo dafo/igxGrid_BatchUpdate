@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, shareReplay } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { City } from './city';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 
 @Injectable()
 export class CityService {
@@ -26,15 +26,20 @@ export class CityService {
         return this.http.get<City[]>(this._getURL).pipe(map(response => response));
     }
 
-    commitCities(transactions) {
+    commitCities(transactions): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json'
             })
           };
-        this.http.post(this._getURL, transactions, httpOptions)
+
+        return Observable.create((observer: Observer<any>) => {
+         this.http.post(this._getURL, transactions, httpOptions)
             .subscribe(res => {
                 console.log('success');
-            });
+                observer.next(res);
+                observer.complete();
+            }, err => observer.error(err));
+        });
     }
 }

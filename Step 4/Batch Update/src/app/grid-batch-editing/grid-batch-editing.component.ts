@@ -16,6 +16,7 @@ export class GridBatchEditingComponent implements OnInit {
 
   public data: City [];
   public transactionsData: Transaction[] = [];
+  public errors: any[];
 
   public get transactions() {
     return this.grid.transactions;
@@ -37,7 +38,7 @@ export class GridBatchEditingComponent implements OnInit {
     this.grid.addRow({
       CityID: this.generateID(),
       CityName: 'Provide city name!',
-      HolidayDate:new Date(2019, 6, 15),
+      HolidayDate: new Date(2019, 6, 15),
       Population: 0,
       TrainStation: false,
       Description: 'Provide description!'
@@ -54,8 +55,10 @@ export class GridBatchEditingComponent implements OnInit {
   }
 
   public commit() {
-    this._cityService.commitCities(this.grid.transactions.getAggregatedChanges(true));
-    this.grid.transactions.commit(this.data);
+    this._cityService.commitCities(this.grid.transactions.getAggregatedChanges(true))
+    .subscribe(res => {
+      this.grid.transactions.commit(this.data);
+    }, err => this.errors = err);
     this.dialog.close();
   }
 
