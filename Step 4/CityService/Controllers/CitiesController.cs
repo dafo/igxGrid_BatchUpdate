@@ -13,6 +13,8 @@ using CityService.Models;
 
 namespace CityService.Controllers
 {
+	[Route("api/Cities")]
+	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
     public class CitiesController : ApiController
     {
 		private CityServiceContext db = new CityServiceContext();
@@ -70,6 +72,11 @@ namespace CityService.Controllers
 			public T newValue;
 			public string type;
 		}
-
+	}
+	public static class CORSConfig
+	{
+		public const string allowedOrigins = "http://localhost:4200";
+		public const string allowedHeaders = "*";
+		public const string allowedMethods = "*";
 	}
 }
