@@ -35,6 +35,7 @@ export class GridBatchEditingComponent implements OnInit {
 
   public addRow() {
     this.grid.addRow({
+      CityID: this.generateID(),
       CityName: 'Provide city name!',
       HolidayDate:new Date(2019, 6, 15),
       Population: 0,
@@ -77,5 +78,11 @@ export class GridBatchEditingComponent implements OnInit {
 
   public typeFormatter(value: string) {
     return value.toUpperCase();
+  }
+
+  public generateID() {
+    let number;
+    number = 'temp' + Math.random();
+    return number;
   }
 }
