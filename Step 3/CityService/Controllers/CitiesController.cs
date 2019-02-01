@@ -17,9 +17,9 @@ namespace CityService.Controllers
     {
 		private CityServiceContext db = new CityServiceContext();
 		// GET: api/Cities
-		public IQueryable<City> GetCities()
+		public IList<City> GetCities()
 		{
-			return db.Cities;
+			return db.Cities.ToList();
 		}
 
 		public IHttpActionResult UpdateCities(ITransaction<City>[] transactions)
