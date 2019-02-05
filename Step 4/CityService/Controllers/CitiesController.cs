@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.Cors;
 using CityService.Models;
 
 namespace CityService.Controllers
 {
 	[Route("api/Cities")]
 	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-    public class CitiesController : ApiController
+	public class CitiesController : ApiController
     {
 		private CityServiceContext db = new CityServiceContext();
 		// GET: api/Cities
@@ -23,6 +18,11 @@ namespace CityService.Controllers
 		{
 			return db.Cities.ToList();
 		}
+
+		// Comment out the following if you want to use separate end points 
+		// and to pracess the transactions on the client - side
+		
+		// POST: api/Cities/UpdateCities
 		public IHttpActionResult UpdateCities(ITransaction<City>[] transactions)
 		{
 
@@ -31,7 +31,7 @@ namespace CityService.Controllers
 				var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
 				switch (transaction.type)
 				{
-					case "update":					
+					case "update":
 
 						// Update the properties values
 						db.Entry(city).CurrentValues.SetValues(transaction.newValue);
@@ -64,13 +64,71 @@ namespace CityService.Controllers
 			return Ok();
 		}
 
+		// Uncomment the following if you want to use separate end points 
+		// and to pracess the transactions on the client - side
+
+		//[HttpPut]
+		//[Route("api/Cities/Delete")]
+		//[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
+		//public IHttpActionResult DeleteCity(ITransaction<City> transaction)
+		//{
+		//	var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
+		//	db.Cities.Remove(city);
+		//	try
+		//	{
+		//		db.SaveChanges();
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(e.Message);
+		//	}
+		//	return Ok();
+		//}
+
+		//[HttpPost]
+		//[Route("api/Cities/Add")]
+		//[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
+		//public IHttpActionResult AddCity(ITransaction<City> transaction)
+		//{
+		//	db.Cities.Add(transaction.newValue);
+		//	try
+		//	{
+		//		db.SaveChanges();
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(e.Message);
+		//	}
+		//	return Ok();
+		//}
+
+		//[HttpPut]
+		//[Route("api/Cities/Update")]
+		//[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
+		//public IHttpActionResult UpdateCity(ITransaction<City> transaction)
+		//{
+		//	var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
+		//	db.Entry(city).CurrentValues.SetValues(transaction.newValue);
+		//	try
+		//	{
+		//		db.SaveChanges();
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		return BadRequest(e.Message);
+		//	}
+		//	return Ok();
+		//}
+
 		public class ITransaction<T>
 		{
 			public int id;
 			public T newValue;
 			public string type;
 		}
+
 	}
+
 	public static class CORSConfig
 	{
 		public const string allowedOrigins = "http://localhost:4200";
