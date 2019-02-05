@@ -20,7 +20,7 @@ namespace CityService.Controllers
 		}
 
 		// Comment out the following if you want to use separate end points 
-		// and to pracess the transactions on the client - side
+		// and to process the transactions on the client-side
 		
 		// POST: api/Cities/UpdateCities
 		public IHttpActionResult UpdateCities(ITransaction<City>[] transactions)
@@ -65,7 +65,7 @@ namespace CityService.Controllers
 		}
 
 		// Uncomment the following if you want to use separate end points 
-		// and to pracess the transactions on the client - side
+		// and to process the transactions on the client-side
 
 		//[HttpPut]
 		//[Route("api/Cities/Delete")]
