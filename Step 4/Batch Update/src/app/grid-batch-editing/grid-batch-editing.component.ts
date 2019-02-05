@@ -71,6 +71,10 @@ export class GridBatchEditingComponent implements OnInit {
     this.dialog.close();
   }
 
+  private classFromType(type: string): string {
+    return `transaction--${type.toLowerCase()}`;
+  }
+
   public get hasTransactions(): boolean {
     return this.grid.transactions.getAggregatedChanges(false).length > 0;
   }
