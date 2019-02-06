@@ -29,27 +29,7 @@ export class CityService {
         return this.http.get<City[]>(this._getURL).pipe(map(response => response));
     }
 
-    // Comment out the following if you want to use separate end-points 
-    // and to process the transactions on the client - side
-
-    commitCities(transactions): Observable<any> {
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json'
-            })
-          };
-
-        return Observable.create((observer: Observer<any>) => {
-         this.http.post(this._getURL, transactions, httpOptions)
-            .subscribe(res => {
-                console.log('success');
-                observer.next(res);
-                observer.complete();
-            }, err => observer.error(err));
-        });
-    }
-
-    // Uncomment the following if you want to use separate end-points 
+    // Comment out the following if you want to use separate end-points
     // and to process the transactions on the client - side
 
     // commitCities(transactions): Observable<any> {
@@ -60,37 +40,57 @@ export class CityService {
     //       };
 
     //     return Observable.create((observer: Observer<any>) => {
-    //      transactions.forEach(transaction => {
-    //         switch (transaction.type) {
-    //             case 'delete': {
-    //                 this.http.put(this._deleteURL, transaction, httpOptions)
-    //                 .subscribe(res => {
-    //                     console.log('success');
-    //                     observer.next(res);
-    //                     observer.complete();
-    //                 }, err => observer.error(err));
-    //                 break;
-    //             }
-    //             case 'add': {
-    //                 this.http.post(this._addURL, transaction, httpOptions)
-    //                 .subscribe(res => {
-    //                     console.log('success');
-    //                     observer.next(res);
-    //                     observer.complete();
-    //                 }, err => observer.error(err));
-    //                 break;
-    //             }
-    //             case 'update': {
-    //                 this.http.put(this._updateURL, transaction, httpOptions)
-    //                 .subscribe(res => {
-    //                     console.log('success');
-    //                     observer.next(res);
-    //                     observer.complete();
-    //                 }, err => observer.error(err));
-    //                 break;
-    //             }
-    //         }
-    //      });
+    //      this.http.post(this._getURL, transactions, httpOptions)
+    //         .subscribe(res => {
+    //             console.log('success');
+    //             observer.next(res);
+    //             observer.complete();
+    //         }, err => observer.error(err));
     //     });
     // }
+
+    // Uncomment the following if you want to use separate end-points
+    // and to process the transactions on the client - side
+
+    commitCities(transactions): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json'
+            })
+          };
+
+        return Observable.create((observer: Observer<any>) => {
+         transactions.forEach(transaction => {
+            switch (transaction.type) {
+                case 'delete': {
+                    this.http.delete(this._deleteURL + '?id=' + transaction.id, httpOptions)
+                    .subscribe(res => {
+                        console.log('success');
+                        observer.next(res);
+                        observer.complete();
+                    }, err => observer.error(err));
+                    break;
+                }
+                case 'add': {
+                    this.http.post(this._addURL, transaction, httpOptions)
+                    .subscribe(res => {
+                        console.log('success');
+                        observer.next(res);
+                        observer.complete();
+                    }, err => observer.error(err));
+                    break;
+                }
+                case 'update': {
+                    this.http.put(this._updateURL, transaction, httpOptions)
+                    .subscribe(res => {
+                        console.log('success');
+                        observer.next(res);
+                        observer.complete();
+                    }, err => observer.error(err));
+                    break;
+                }
+            }
+         });
+        });
+    }
 }
