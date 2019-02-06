@@ -10,9 +10,9 @@ namespace CityService.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
-
+		
         protected override void Seed(CityService.Models.CityServiceContext context)
         {
 			//  This method will be called after migrating to the latest version.

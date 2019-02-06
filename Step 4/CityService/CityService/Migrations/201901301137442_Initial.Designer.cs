@@ -13,7 +13,7 @@ namespace CityService.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201901241751385_Initial"; }
+            get { return "201901301137442_Initial"; }
         }
         
         string IMigrationMetadata.Source

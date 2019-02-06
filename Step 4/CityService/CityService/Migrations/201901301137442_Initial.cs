@@ -15,6 +15,7 @@ namespace CityService.Migrations
                         CityName = c.String(),
                         Population = c.Int(nullable: false),
                         TrainStation = c.Boolean(nullable: false),
+                        HolidayDate = c.DateTimeOffset(nullable: false, precision: 7),
                         Description = c.String(),
                     })
                 .PrimaryKey(t => t.CityID);

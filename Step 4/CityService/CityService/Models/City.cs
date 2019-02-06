@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CityService.Models
 {
@@ -12,6 +13,7 @@ namespace CityService.Models
 		public int Population { get; set; }
 		public bool TrainStation { get; set; }
 		public System.DateTimeOffset HolidayDate { get; set; }
+		// public object HolidayDate { get; set; }
 		public string Description { get; set; }
 	}
 }
