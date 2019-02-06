@@ -22,10 +22,9 @@ namespace CityService.Controllers
 		[HttpDelete]
 		[Route("api/Cities/Delete")]
 		[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-		public IHttpActionResult DeleteCity(string id)
+		public IHttpActionResult DeleteCity(int id)
 		{
-			int recordID = Int32.Parse(id);
-			var city = db.Cities.Where(x => x.CityID == recordID).FirstOrDefault();
+			var city = db.Cities.Where(x => x.CityID == id).FirstOrDefault();
 			db.Cities.Remove(city);
 			try
 			{
