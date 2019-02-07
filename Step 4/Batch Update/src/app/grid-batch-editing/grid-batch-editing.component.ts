@@ -22,10 +22,10 @@ export class GridBatchEditingComponent implements OnInit {
     return this.grid.transactions;
   }
 
-  constructor(private _cityService: CityService) { }
+  constructor(private cityService: CityService) { }
 
   public ngOnInit(): void {
-    this._cityService.cities.subscribe(data => {
+    this.cityService.cities.subscribe(data => {
       this.data = data;
     });
     this.transactionsData = this.transactions.getAggregatedChanges(true);
@@ -55,10 +55,29 @@ export class GridBatchEditingComponent implements OnInit {
   }
 
   public commit() {
-    this._cityService.commitCities(this.grid.transactions.getAggregatedChanges(true))
-    .subscribe(res => {
-      this.grid.transactions.commit(this.data);
-    }, err => this.errors = err);
+    let addResult: { [id: number]: City};
+
+    this.cityService.commitCities(this.grid.transactions.getAggregatedChanges(true))
+      .subscribe(res => {
+          if (res) {
+            addResult = res;
+          }
+        },
+        err => this.errors = err,
+        () => {
+          // all done, commit transactions
+          this.grid.transactions.commit(this.data);
+          if (!addResult) {
+            return;
+          }
+          // update added records IDs with ones generated from backend
+          for (const id of Object.keys(addResult)) {
+            const item = this.data.find(x => x.CityID === parseInt(id, 10));
+            item.CityID = addResult[id].CityID;
+          }
+          this.data = [...this.data];
+        }
+      );
     this.dialog.close();
   }
 
@@ -88,8 +107,10 @@ export class GridBatchEditingComponent implements OnInit {
   }
 
   public generateID() {
-    let number;
-    number = 'temp' + Math.random();
-    return number;
+    return parseInt(new Date().getTime().toString().substring(4), 10);
+  }
+
+  cellExitEditMode(event) {
+    console.log('Exit edit mode!');
   }
 }

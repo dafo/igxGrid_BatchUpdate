@@ -4,7 +4,7 @@
 <a href="https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html" target="_blank">official documentation</a>.</p>
 <app-grid-batch-editing-with-transactions>
     <igx-grid #gridRowEditTransaction [data]="data | transformDates" [primaryKey]="'CityID'" width="835px" height="500px"
-        [rowEditable]="true">
+    [rowEditable]="true">
         <igx-column width="135px">
             <ng-template igxCell let-cell="cell" let-val>
                 <button igxButton (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>

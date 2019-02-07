@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { map, shareReplay } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { City } from './city';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, merge } from 'rxjs';
+import { Transaction } from 'igniteui-angular';
 
 @Injectable()
 export class CityService {
 
     private _getURL = 'http://localhost:36830/api/cities/';
-    private _deleteURL = 'http://localhost:36830/api/cities/delete';
-    private _addURL = 'http://localhost:36830/api/cities/add';
-    private _updateURL = 'http://localhost:36830/api/cities/update';
+    private _deleteURL = 'http://localhost:36830/api/cities1';
+    private _addURL = 'http://localhost:36830/api/cities1';
+    private _updateURL = 'http://localhost:36830/api/cities1';
     private _cities: Observable<City []>;
 
     constructor(private http: HttpClient) { }
@@ -52,45 +53,34 @@ export class CityService {
     // Uncomment the following if you want to use separate end-points
     // and to process the transactions on the client - side
 
-    commitCities(transactions): Observable<any> {
+    commitCities(transactions: Transaction[]): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json'
             })
           };
 
-        return Observable.create((observer: Observer<any>) => {
-         transactions.forEach(transaction => {
-            switch (transaction.type) {
-                case 'delete': {
-                    this.http.delete(this._deleteURL + '?id=' + transaction.id, httpOptions)
-                    .subscribe(res => {
-                        console.log('success');
-                        observer.next(res);
-                        observer.complete();
-                    }, err => observer.error(err));
-                    break;
+        const requests: Observable<Object>[] = [];
+
+        const updates = transactions.filter(x => x.type === 'update');
+        const adds = transactions.filter(x => x.type === 'add');
+        const deletes = transactions.filter(x => x.type === 'delete');
+
+        if (deletes.length) {
+            requests.push(this.http.delete(this._deleteURL, {
+                params: {
+                    ids: deletes.map(t => t.id)
                 }
-                case 'add': {
-                    this.http.post(this._addURL, transaction, httpOptions)
-                    .subscribe(res => {
-                        console.log('success');
-                        observer.next(res);
-                        observer.complete();
-                    }, err => observer.error(err));
-                    break;
-                }
-                case 'update': {
-                    this.http.put(this._updateURL, transaction, httpOptions)
-                    .subscribe(res => {
-                        console.log('success');
-                        observer.next(res);
-                        observer.complete();
-                    }, err => observer.error(err));
-                    break;
-                }
-            }
-         });
-        });
+            }));
+        }
+        if (adds.length) {
+            requests.push(this.http.post(this._addURL, adds.map(t => t.newValue), httpOptions));
+        }
+        if (updates.length) {
+            requests.push(this.http.put(this._updateURL, updates.map(t => t.newValue), httpOptions));
+        }
+
+        // Thsi should be mergeMap probably
+        return merge(...requests);
     }
 }
