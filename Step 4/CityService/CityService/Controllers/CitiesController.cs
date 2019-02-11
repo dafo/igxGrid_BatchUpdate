@@ -15,7 +15,7 @@ using CityService.Models;
 namespace CityService.Controllers
 {
 	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-	public class Cities1Controller : ApiController
+	public class CitiesController : ApiController
     {
         private CityServiceContext db = new CityServiceContext();
 
@@ -107,4 +107,16 @@ namespace CityService.Controllers
             return db.Cities.Count(e => e.CityID == id) > 0;
         }
     }
+
+	public static class CORSConfig
+
+	{
+
+		public const string allowedOrigins = "http://localhost:4200";
+
+		public const string allowedHeaders = "*";
+
+		public const string allowedMethods = "*";
+
+	}
 }
