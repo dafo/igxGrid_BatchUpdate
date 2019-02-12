@@ -19,6 +19,19 @@ namespace CityService.Controllers
 			return db.Cities.ToList();
 		}
 
+		// GET: api/Cities/5
+        [ResponseType(typeof(City))]
+        public async Task<IHttpActionResult> GetCity(int id)
+        {
+            City city = await db.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(city);
+        }
+
 		// Comment out the following if you want to use separate end points 
 		// and to process the transactions on the client-side
 		
@@ -67,58 +80,75 @@ namespace CityService.Controllers
 		// Uncomment the following if you want to use separate end points 
 		// and to process the transactions on the client-side
 
-		//[HttpPut]
-		//[Route("api/Cities/Delete")]
-		//[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-		//public IHttpActionResult DeleteCity(ITransaction<City> transaction)
-		//{
-		//	var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
-		//	db.Cities.Remove(city);
-		//	try
-		//	{
-		//		db.SaveChanges();
-		//	}
-		//	catch (Exception e)
-		//	{
-		//		return BadRequest(e.Message);
-		//	}
-		//	return Ok();
-		//}
+        // PUT: api/Cities/5
+    //     [ResponseType(typeof(void))]
+    //     public async Task<IHttpActionResult> PutCity(City[] cities)
+    //     {
+    //         if (!ModelState.IsValid)
+    //         {
+    //             return BadRequest(ModelState);
+    //         }
+		// 	foreach (var city in cities)
+		// 	{
+		// 		db.Entry(city).State = EntityState.Modified;
+		// 	}
 
-		//[HttpPost]
-		//[Route("api/Cities/Add")]
-		//[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-		//public IHttpActionResult AddCity(ITransaction<City> transaction)
-		//{
-		//	db.Cities.Add(transaction.newValue);
-		//	try
-		//	{
-		//		db.SaveChanges();
-		//	}
-		//	catch (Exception e)
-		//	{
-		//		return BadRequest(e.Message);
-		//	}
-		//	return Ok();
-		//}
+    //         await db.SaveChangesAsync();
 
-		//[HttpPut]
-		//[Route("api/Cities/Update")]
-		//[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-		//public IHttpActionResult UpdateCity(ITransaction<City> transaction)
-		//{
-		//	var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
-		//	db.Entry(city).CurrentValues.SetValues(transaction.newValue);
-		//	try
-		//	{
-		//		db.SaveChanges();
-		//	}
-		//	catch (Exception e)
-		//	{
-		//		return BadRequest(e.Message);
-		//	}
-		//	return Ok();
-		//}
+    //         return StatusCode(HttpStatusCode.NoContent);
+    //     }
+
+    //     // POST: api/Cities
+    //     [ResponseType(typeof(City))]
+    //     public async Task<IHttpActionResult> PostCity(City[] cities)
+    //     {
+		// 	Dictionary<int, City> results = new Dictionary<int, City>();
+    //         if (!ModelState.IsValid)
+    //         {
+    //             return BadRequest(ModelState);
+    //         }
+		// 	foreach (var city in cities)
+		// 	{
+		// 		results.Add(city.CityID, city);
+		// 		db.Cities.Add(city);
+		// 	}
+    //         await db.SaveChangesAsync();
+
+    //         return CreatedAtRoute("DefaultApi", null, results);
+    //     }
+
+    //     // DELETE: api/Cities/5
+    //     [ResponseType(typeof(City))]
+    //     public async Task<IHttpActionResult> DeleteCity([FromUri] int[] ids)
+    //     {
+		// 	foreach (var id in ids)
+		// 	{
+		// 		City city = await db.Cities.FindAsync(id);
+		// 		if (city == null)
+		// 		{
+		// 			return NotFound();
+		// 		}
+		// 		db.Cities.Remove(city);
+		// 	}
+    //         await db.SaveChangesAsync();
+
+		// 	return StatusCode(HttpStatusCode.NoContent);
+		// }
+
+    //     protected override void Dispose(bool disposing)
+    //     {
+    //         if (disposing)
+    //         {
+    //             db.Dispose();
+    //         }
+    //         base.Dispose(disposing);
+    //     }
+
+    //     private bool CityExists(int id)
+    //     {
+    //         return db.Cities.Count(e => e.CityID == id) > 0;
+    //     }
+    // }
 
 		public class ITransaction<T>
 		{
