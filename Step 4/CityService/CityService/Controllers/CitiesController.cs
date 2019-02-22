@@ -19,13 +19,13 @@ namespace CityService.Controllers
     {
         private CityServiceContext db = new CityServiceContext();
 
-        // GET: api/Cities1
+        // GET: api/Cities
         public IQueryable<City> GetCities()
         {
             return db.Cities;
         }
 
-        // GET: api/Cities1/5
+        // GET: api/Cities/5
         [ResponseType(typeof(City))]
         public async Task<IHttpActionResult> GetCity(int id)
         {
@@ -38,62 +38,108 @@ namespace CityService.Controllers
             return Ok(city);
         }
 
-        // PUT: api/Cities1/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCity(City[] cities)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-			foreach (var city in cities)
+		// Comment the PostCity() method if you want to process the transactions on the client side
+
+		// POST: api/Cities/UpdateCities
+		public IHttpActionResult PostCity(ITransaction<City>[] transactions)
+		{
+
+			foreach (var transaction in transactions)
 			{
-				db.Entry(city).State = EntityState.Modified;
-			}
-
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Cities1
-        [ResponseType(typeof(City))]
-        public async Task<IHttpActionResult> PostCity(City[] cities)
-        {
-			Dictionary<int, City> results = new Dictionary<int, City>();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-			foreach (var city in cities)
-			{
-				results.Add(city.CityID, city);
-				db.Cities.Add(city);
-			}
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", null, results);
-        }
-
-        // DELETE: api/Cities1/5
-        [ResponseType(typeof(City))]
-        public async Task<IHttpActionResult> DeleteCity([FromUri] int[] ids)
-        {
-			foreach (var id in ids)
-			{
-				City city = await db.Cities.FindAsync(id);
-				if (city == null)
+				var city = db.Cities.Where(x => x.CityID == transaction.id).FirstOrDefault();
+				switch (transaction.type)
 				{
-					return NotFound();
-				}
-				db.Cities.Remove(city);
-			}
-            await db.SaveChangesAsync();
+					case "update":
 
-			return StatusCode(HttpStatusCode.NoContent);
+						// Update the properties values
+						db.Entry(city).CurrentValues.SetValues(transaction.newValue);
+
+						// You can set the values property by property instead of using SetValues()
+
+						//city.CityName = transaction.newValue.CityName;
+						//city.Population = transaction.newValue.Population;
+						//city.TrainStation = transaction.newValue.TrainStation;
+						//city.HolidayDate = transaction.newValue.HolidayDate;
+						//city.Description = transaction.newValue.Description;
+						break;
+					case "add":
+						db.Cities.Add(transaction.newValue);
+						break;
+					case "delete":
+						db.Cities.Remove(city);
+						break;
+
+				}
+			}
+			try
+			{
+				db.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok();
 		}
 
-        protected override void Dispose(bool disposing)
+		// Uncomment the following block if you want to process the transactions on the client side
+
+		//      // PUT: api/Cities/5
+		//      [ResponseType(typeof(void))]
+		//      public async Task<IHttpActionResult> PutCity(City[] cities)
+		//      {
+		//          if (!ModelState.IsValid)
+		//          {
+		//              return BadRequest(ModelState);
+		//          }
+		//	foreach (var city in cities)
+		//	{
+		//		db.Entry(city).State = EntityState.Modified;
+		//	}
+
+		//          await db.SaveChangesAsync();
+
+		//          return StatusCode(HttpStatusCode.NoContent);
+		//      }
+
+		//      // POST: api/Cities
+		//      [ResponseType(typeof(City))]
+		//      public async Task<IHttpActionResult> PostCity(City[] cities)
+		//      {
+		//	Dictionary<int, City> results = new Dictionary<int, City>();
+		//          if (!ModelState.IsValid)
+		//          {
+		//              return BadRequest(ModelState);
+		//          }
+		//	foreach (var city in cities)
+		//	{
+		//		results.Add(city.CityID, city);
+		//		db.Cities.Add(city);
+		//	}
+		//          await db.SaveChangesAsync();
+
+		//          return CreatedAtRoute("DefaultApi", null, results);
+		//      }
+
+		//      // DELETE: api/Cities/5
+		//      [ResponseType(typeof(City))]
+		//      public async Task<IHttpActionResult> DeleteCity([FromUri] int[] ids)
+		//      {
+		//	foreach (var id in ids)
+		//	{
+		//		City city = await db.Cities.FindAsync(id);
+		//		if (city == null)
+		//		{
+		//			return NotFound();
+		//		}
+		//		db.Cities.Remove(city);
+		//	}
+		//          await db.SaveChangesAsync();
+
+		//	return StatusCode(HttpStatusCode.NoContent);
+		//}
+
+		protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -107,6 +153,13 @@ namespace CityService.Controllers
             return db.Cities.Count(e => e.CityID == id) > 0;
         }
     }
+
+	public class ITransaction<T>
+	{
+		public int id;
+		public T newValue;
+		public string type;
+	}
 
 	public static class CORSConfig
 
