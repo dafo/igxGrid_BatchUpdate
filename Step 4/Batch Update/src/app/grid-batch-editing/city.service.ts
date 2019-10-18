@@ -31,56 +31,56 @@ export class CityService {
     }
 
     // Comment out the following if you want to use separate end-points
-    // and to process the transactions on the client - side
+    // and to process the transactions on the server
 
-    // commitCities(transactions): Observable<any> {
-    //     const httpOptions = {
-    //         headers: new HttpHeaders({
-    //           'Content-Type':  'application/json'
-    //         })
-    //       };
-
-    //     return Observable.create((observer: Observer<any>) => {
-    //      this.http.post(this._getURL, transactions, httpOptions)
-    //         .subscribe(res => {
-    //             console.log('success');
-    //             observer.next(res);
-    //             observer.complete();
-    //         }, err => observer.error(err));
-    //     });
-    // }
-
-    // Uncomment the following if you want to use separate end-points
-    // and to process the transactions on the client - side
-
-    commitCities(transactions: Transaction[]): Observable<any> {
+    commitCities(transactions): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json'
             })
           };
 
-        const requests: Observable<Object>[] = [];
-
-        const updates = transactions.filter(x => x.type === 'update');
-        const adds = transactions.filter(x => x.type === 'add');
-        const deletes = transactions.filter(x => x.type === 'delete');
-
-        if (deletes.length) {
-            requests.push(this.http.delete(this._deleteURL, {
-                params: {
-                    ids: deletes.map(t => t.id)
-                }
-            }));
-        }
-        if (adds.length) {
-            requests.push(this.http.post(this._addURL, adds.map(t => t.newValue), httpOptions));
-        }
-        if (updates.length) {
-            requests.push(this.http.put(this._updateURL, updates.map(t => t.newValue), httpOptions));
-        }
-
-        // Thsi should be mergeMap probably
-        return merge(...requests);
+        return Observable.create((observer: Observer<any>) => {
+         this.http.post(this._getURL, transactions, httpOptions)
+            .subscribe(res => {
+                console.log('success');
+                observer.next(res);
+                observer.complete();
+            }, err => observer.error(err));
+        });
     }
+
+    // Uncomment the following if you want to use separate end-points
+    // and to process the transactions on the client - side
+
+    // commitCities(transactions: Transaction[]): Observable<any> {
+    //     const httpOptions = {
+    //         headers: new HttpHeaders({
+    //           'Content-Type':  'application/json'
+    //         })
+    //       };
+
+    //     const requests: Observable<Object>[] = [];
+
+    //     const updates = transactions.filter(x => x.type === 'update');
+    //     const adds = transactions.filter(x => x.type === 'add');
+    //     const deletes = transactions.filter(x => x.type === 'delete');
+
+    //     if (deletes.length) {
+    //         requests.push(this.http.delete(this._deleteURL, {
+    //             params: {
+    //                 ids: deletes.map(t => t.id)
+    //             }
+    //         }));
+    //     }
+    //     if (adds.length) {
+    //         requests.push(this.http.post(this._addURL, adds.map(t => t.newValue), httpOptions));
+    //     }
+    //     if (updates.length) {
+    //         requests.push(this.http.put(this._updateURL, updates.map(t => t.newValue), httpOptions));
+    //     }
+
+    //     // This should be mergeMap probably
+    //     return merge(...requests);
+    // }
 }
