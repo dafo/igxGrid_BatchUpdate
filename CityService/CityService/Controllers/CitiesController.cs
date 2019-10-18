@@ -43,6 +43,7 @@ namespace CityService.Controllers
 		// POST: api/Cities/UpdateCities
 		public IHttpActionResult PostCity(ITransaction<City>[] transactions)
 		{
+			var addedCities = new Dictionary<int, City>();
 
 			foreach (var transaction in transactions)
 			{
@@ -63,7 +64,8 @@ namespace CityService.Controllers
 						//city.Description = transaction.newValue.Description;
 						break;
 					case "add":
-						db.Cities.Add(transaction.newValue);
+						City addedCity = db.Cities.Add(transaction.newValue);
+						addedCities[addedCity.CityID] = addedCity;
 						break;
 					case "delete":
 						db.Cities.Remove(city);
@@ -79,7 +81,7 @@ namespace CityService.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-			return Ok();
+			return Ok(addedCities);
 		}
 
 		// Uncomment the following block if you want to process the transactions on the client side
