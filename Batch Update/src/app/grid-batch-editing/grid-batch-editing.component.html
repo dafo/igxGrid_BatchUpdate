@@ -5,21 +5,18 @@
 <app-grid-batch-editing-with-transactions>
     <igx-grid #gridRowEditTransaction [data]="data | transformDates" [primaryKey]="'CityID'" width="835px" height="500px"
     [rowEditable]="true">
-        <igx-column width="135px">
-            <ng-template igxCell let-cell="cell" let-val>
-                <button igxButton (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
-            </ng-template>
-        </igx-column>
-        <igx-column width="90px" field="CityID" header="City ID"></igx-column>
+        <igx-column width="90px" field="CityID" header="City ID" [dataType]="'number'"></igx-column>
         <igx-column width="100px" field="Population" header="Population" [dataType]="'number'"></igx-column>
         <igx-column width="190px" field="CityName" header="CityName" [dataType]="'string'"></igx-column>
         <igx-column width="150px" field="HolidayDate" [dataType]="'date'"></igx-column>
         <igx-column width="100px" field="TrainStation" header="TrainStation" [dataType]="'boolean'"></igx-column>
         <igx-column width="100px" field="Description" header="Description" [dataType]="'string'"></igx-column>
+        <igx-action-strip #actionstrip>
+            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+        </igx-action-strip>
     </igx-grid>
   </app-grid-batch-editing-with-transactions>
 <div class="buttons-row">
-    <button igxButton (click)="addRow()" igxRipple>Add Row</button>
     <div class="buttons-wrapper">
         <button igxButton [disabled]="!transactions.canUndo" (click)="transactions.undo()" igxRipple>Undo</button>
         <button igxButton [disabled]="!transactions.canRedo" (click)="transactions.redo()" igxRipple>Redo</button>

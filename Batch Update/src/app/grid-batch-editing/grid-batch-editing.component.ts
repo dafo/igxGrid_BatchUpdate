@@ -10,9 +10,9 @@ import { CityService } from './city.service';
   templateUrl: './grid-batch-editing.component.html'
 })
 export class GridBatchEditingComponent implements OnInit {
-  @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public grid: IgxGridComponent;
-  @ViewChild(IgxDialogComponent) public dialog: IgxDialogComponent;
-  @ViewChild('dialogGrid', { read: IgxGridComponent }) public dialogGrid: IgxGridComponent;
+  @ViewChild('gridRowEditTransaction', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
+  @ViewChild(IgxDialogComponent, { static: true }) public dialog: IgxDialogComponent;
+  @ViewChild('dialogGrid', { read: IgxGridComponent, static: true }) public dialogGrid: IgxGridComponent;
 
   public data: City [];
   public transactionsData: Transaction[] = [];
